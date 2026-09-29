@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>社区雨水口清掏管理平台</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="logo">雨水口清掏<span class="drop">·</span>调度平台</div>
+  <nav class="tabs" id="tabs">
+    <a href="#map" data-view="map">片区点位图</a>
+    <a href="#patrol" data-view="patrol">巡查列表</a>
+    <a href="#schedule" data-view="schedule">班组日程</a>
+    <a href="#clean" data-view="clean">清掏记录</a>
+    <a href="#vehicle" data-view="vehicle">车辆交接</a>
+    <a href="#accept" data-view="accept">验收台账</a>
+  </nav>
+  <div class="who">
+    <span class="role-badge" id="roleBadge">—</span>
+    <select id="userSelect" title="切换身份（本地样例）"></select>
+  </div>
+</header>
+
+<div class="reminder-bar" id="reminderBar"></div>
+
+<main>
+  <!-- ============ 片区点位图 ============ -->
+  <section class="view" id="view-map">
+    <div class="toolbar">
+      <h2>片区点位图</h2>
+      <span class="muted">点位仅显示编号与堵塞等级，点击打开侧栏查看照片与工序</span>
+      <div class="spacer"></div>
+      <button class="ghost small" id="mapRefresh">刷新</button>
+    </div>
+    <div class="map-wrap">
+      <div class="map-canvas" id="mapCanvas">
+        <svg id="mapSvg" viewBox="0 0 1000 520" preserveAspectRatio="xMidYMid meet"></svg>
+        <div class="map-legend" id="mapLegend"></div>
+      </div>
+      <aside class="sidebar" id="mapSidebar"></aside>
+    </div>
+  </section>
+
+  <!-- ============ 巡查列表 ============ -->
+  <section class="view" id="view-patrol">
+    <div class="toolbar">
+      <h2>巡查列表</h2>
+      <label class="field">状态
+        <select id="fOrderStatus">
+          <option value="">全部</option>
+          <option value="open">待派工</option>
+          <option value="dispatched">已派工</option>
+          <option value="working">作业中</option>
+          <option value="pending_accept">待验收</option>
+          <option value="rejected">验收退回</option>
+          <option value="accepted">已完成</option>
+        </select>
+      </label>
+      <label class="field">专项
+        <select id="fIssueKind"><option value="">全部</option></select>
+      </label>
+      <div class="spacer"></div>
+      <button class="orange" id="btnCreateOrder">＋ 巡查建单 / 划警戒</button>
+      <button class="ghost" id="btnFeedback">居民反馈</button>
+    </div>
+    <div class="content">
+      <div class="card">
+        <table class="grid" id="ordersTable"></table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 班组日程 ============ -->
+  <section class="view" id="view-schedule">
+    <div class="toolbar">
+      <h2>班组日程</h2>
+      <label class="field">班组 <select id="fCrew"><option value="">全部班组</option></select></label>
+      <div class="spacer"></div>
+      <span class="muted" id="mergeHint">可在待派工单上选择相邻点位「合并派车」（同区段 ≤150m，合单不合并验收）</span>
+      <button class="orange" id="btnDispatch">派工 / 合并派车</button>
+    </div>
+    <div class="content">
+      <div class="card" id="scheduleBoard"></div>
+      <div class="card" style="margin-top:14px">
+        <table class="grid" id="scheduleTable"></table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 清掏记录 ============ -->
+  <section class="view" id="view-clean">
+    <div class="toolbar">
+      <h2>清掏记录</h2>
+      <label class="field">派工 <select id="cleanDispatch"></select></label>
+      <div class="spacer"></div>
+      <button class="ghost small" id="cleanRefresh">刷新</button>
+    </div>
+    <div class="content" id="cleanBody"></div>
+  </section>
+
+  <!-- ============ 车辆交接 ============ -->
+  <section class="view" id="view-vehicle">
+    <div class="toolbar">
+      <h2>车辆交接</h2>
+      <div class="spacer"></div>
+      <span class="muted">过磅由模拟地磅适配器返回；重量修订须主管写明原因</span>
+      <button class="ghost small" id="vehicleRefresh">刷新</button>
+    </div>
+    <div class="content">
+      <div class="card"><table class="grid" id="handoverTable"></table></div>
+    </div>
+  </section>
+
+  <!-- ============ 验收台账 ============ -->
+  <section class="view" id="view-accept">
+    <div class="toolbar">
+      <h2>验收台账</h2>
+      <label class="field">结论
+        <select id="fAcceptResult">
+          <option value="">全部</option>
+          <option value="pending">待验收</option>
+          <option value="pass">通过</option>
+          <option value="reject">退回</option>
+        </select>
+      </label>
+      <div class="spacer"></div>
+      <button class="ghost small" id="acceptRefresh">刷新</button>
+    </div>
+    <div class="content">
+      <div class="card"><table class="grid" id="acceptTable"></table></div>
+    </div>
+  </section>
+</main>
+
+<!-- 通用弹窗 -->
+<div class="modal-mask" id="modalMask">
+  <div class="modal" id="modalBox">
+    <header><h3 id="modalTitle"></h3><button class="ghost small" id="modalClose">✕</button></header>
+    <div class="m-body" id="modalBody"></div>
+    <div class="m-foot" id="modalFoot"></div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
