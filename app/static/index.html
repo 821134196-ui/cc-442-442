@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>社区雨水口清掏管理平台</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="logo">🌧 雨水口<span class="drop">清掏</span>管理平台</div>
+    <nav class="tabs">
+      <a href="#/map" data-page="map">片区点位图</a>
+      <a href="#/patrol" data-page="patrol">巡查列表</a>
+      <a href="#/schedule" data-page="schedule">班组日程</a>
+      <a href="#/records" data-page="records">清掏记录</a>
+      <a href="#/handover" data-page="handover">车辆交接</a>
+      <a href="#/acceptance" data-page="acceptance">验收台账</a>
+    </nav>
+    <div class="bell-wrap" id="bell" title="通知 / 暴雨前复查提醒">
+      🔔<span class="bell-dot" id="bellDot" style="display:none"></span>
+      <div class="notif-panel" id="notifPanel"></div>
+    </div>
+    <div class="role-box hide-sm">
+      <span>当前身份</span>
+      <select id="roleSelect"></select>
+    </div>
+  </header>
+  <main>
+    <h2 id="pageTitle" style="font-size:18px;margin:4px 0 14px"></h2>
+    <div id="view"></div>
+  </main>
+  <div id="toast"></div>
+  <script src="/static/app.js"></script>
+</body>
+</html>
